@@ -1,0 +1,32 @@
+import subprocess
+from datetime import datetime
+
+# Daftar host yang ingin di-ping
+hosts = ["8.8.8.8", "1.1.1.1", "192.168.1.1", "10.0.0.1"]
+
+print("=== Monitoring Jaringan (Ping Otomatis) ===\n")
+
+# Loop untuk setiap host
+for host in hosts:
+    print(f"🔹 Memeriksa koneksi ke {host} ...")
+    
+    # Jalankan perintah ping 2 kali
+    result = subprocess.run(["ping", "-c", "2", host], capture_output=True, text=True)
+    
+    # Tentukan status
+    if result.returncode == 0:
+        status = "✅ ONLINE"
+    else:
+        status = "❌ OFFLINE"
+    
+    # Tampilkan di terminal
+    print(f"Hasil: {status}\n")
+    
+    # Simpan ke file log
+    with open("hasil_ping.log", "a") as file:
+        file.write(f"{datetime.now()} - Host: {host} - {status}\n")
+        file.write(result.stdout)
+        file.write("-" * 60 + "\n")
+
+print("=== Pengecekan selesai ===")
+print("📁 Hasil ping telah disimpan di file: hasil_ping.log")
